@@ -212,9 +212,9 @@ def invoice(request):
             print(item)
             from_email = request.POST["from_email"]
             status = request.POST["status"]
-           #total = 0
-            #for x, y in zip(price, quantity):
-             #   total = int(x) * int(y) + int(total)
+            totl = 0
+            for x, y in zip(price, quantity):
+                totl = int(x) * int(y) + int(totl)
             #tran = Transaction.objects.create(price=price, item=item, quantity=quantity, total=1)
             if tax == '':
                 tax = 0
@@ -236,10 +236,12 @@ def invoice(request):
                 print(pric, quantit)
                 xo.transactions.create(price=pric, item=ite, quantity=quantit,
                                        total=int(pric)*int(quantit))
-            data = xo.transactions.aggregate(sum = Sum('total'))
-            vat = int(data["sum"]) * float(xo.tax) / 100
-            total = int(data["sum"]) + vat
-            context = {"obj":xo, "sum":data["sum"],"vat":vat, "total":total}
+            #data = xo.transactions.aggregate(sum = Sum('total'))
+            #vat = int(data["sum"]) * float(xo.tax) / 100
+            #total = int(data["sum"]) + vat
+            vat = totl * float(xo.tax) / 100
+            total = int(totl) +vat
+            context = {"obj":xo, "sum":totl,"vat":vat, "total":total}
             return render(request, "preview_template_1.html", context)
         return redirect('login')
     return render(request, "invoice-gen.html")
