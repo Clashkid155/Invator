@@ -35,10 +35,10 @@ def contact_page(request):
                         ["believemanasseh@gmail.com"],
                         fail_silently=False,
                 )
-                messages.success(request, 'Message delivered successfully!')        
+                messages.success(request, 'Message delivered successfully!')
             except BadHeaderError:
                 messages.error(request, 'Message couldn\'t be delivered!')
-            return render(request, "contact.html", {"form": form})          
+            return render(request, "contact.html", {"form": form})
     return render(request, "contact.html", {"form": form})
 
 def homepage(request):
@@ -105,7 +105,7 @@ def invoice_detail_view(request, pk):
 
 def invoice_update_view(request, pk):
     context = {}
-    # fetch object for id 
+    # fetch object for id
     invoice_obj = get_object_or_404(Invoice, pk=pk)
     if request.method == "POST":
         status = request.POST.get('status')
@@ -125,7 +125,7 @@ def invoice_update_view(request, pk):
         context = {"invoice_obj": invoice_obj}
         return render(request, "invoice_update.html", context)
 '''
-   
+
 
 def dashboard(request):
     '''views for the dashboard template'''
@@ -138,7 +138,7 @@ def dashboard(request):
         auth_invoice = Invoice.objects.filter(user=user)
         # show the latest invoices
         order_invoice = auth_invoice.order_by("-time")
-        
+
         li = []
         for i in order_invoice:
             data = i.transactions.aggregate(sum = Sum(F('quantity') * F('price')))
@@ -151,11 +151,11 @@ def dashboard(request):
             i.total = total
             li.append(total)
         print(li)
-        
-        
+
+
         # only show 4 invoices at a time
         context = order_invoice[:6]
-        
+
         if request.method == "POST":
             fullname = request.POST['fullname']
             username = request.POST['username']
@@ -228,10 +228,10 @@ def invoice(request):
                 to_address=to_address, account_number=account_number,
                 from_full_name=from_full_name, from_phone=from_phone,
                 to_full_name=to_full_name, from_email=from_email,
-                to_email=to_email,tax=tax, title=title, status=status )
+                to_email=to_email,tax=tax, title=title)
 
             # xo.transactions.create(price=price, item=item, quantity=quantity, total=1)
-            
+
             for pric, quantit, ite in zip(price, quantity, item):
                 print(pric, quantit)
                 xo.transactions.create(price=pric, item=ite, quantity=quantit,
